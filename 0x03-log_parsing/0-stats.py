@@ -1,39 +1,43 @@
 #!/usr/bin/python3
-"""This module prints out HTTP Request Stats"""
-
-
-def print_stats(stats):
-    """Prints to stdout the Stats"""
-    print(f"File size: {stats.get('file_size')}", flush=True)
-
-    status_codes = sorted(list(stats.keys())[1:])
-    for key in status_codes:
-        if value := stats.get(key):
-            print(f"{key}: {value}", flush=True)
-
-
-def main():
-    """Main entfry point"""
-    stats = {
-        "file_size": 0,
-    }
-    while True:
-        for _ in range(10):
-            try:
-                line = input()
-                status_code, file_size = line.split(" ")[-2:]
-                status_code = int(status_code)
-                file_size = int(file_size)
-
-                stats["file_size"] += file_size
-                stats[status_code] = stats.get(status_code, 0) + 1
-            except ValueError:
-                continue
-            except KeyboardInterrupt:
-                print_stats(stats)
-                raise
-        print_stats(stats)
+"""Log Parser"""
+import sys
 
 
 if __name__ == "__main__":
-    main()
+    file_size = [0]
+    status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+
+    def print_stats():
+        """Print statistics"""
+        print("File size: {}".format(file_size[0]))
+        for key in sorted(status_codes.keys()):
+            if status_codes[key]:
+                print("{}: {}".format(key, status_codes[key]))
+
+    def parse_line(line):
+        """Checks the line for matches"""
+        try:
+            line = line[:-1]
+            word = line.split(" ")
+            # File size is last parameter on stdout
+            file_size[0] += int(word[-1])
+            # Status code comes before file size
+            status_code = int(word[-2])
+            # Move through dictionary of status codes
+            if status_code in status_codes:
+                status_codes[status_code] += 1
+        except BaseException:
+            pass
+
+    linenum = 1
+    try:
+        for line in sys.stdin:
+            parse_line(line)
+            """ print after every 10 lines """
+            if linenum % 10 == 0:
+                print_stats()
+            linenum += 1
+    except KeyboardInterrupt:
+        print_stats()
+        raise
+    print_stats()

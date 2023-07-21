@@ -4,9 +4,11 @@
 
 def print_stats(stats):
     """Prints to stdout the Stats"""
-    print(f"File size: {stats['file_size']}", flush=True)
-    for key, value in stats.items():
-        if not key == "file_size" and value > 0:
+    print(f"File size: {stats.pop('file_size')}", flush=True)
+
+    status_codes = sorted(stats.keys())
+    for key in status_codes:
+        if value := stats.get(key):
             print(f"{key}: {value}", flush=True)
 
 
@@ -29,6 +31,7 @@ def main():
                 continue
             except KeyboardInterrupt:
                 print_stats(stats)
+                return
         print_stats(stats)
 
 

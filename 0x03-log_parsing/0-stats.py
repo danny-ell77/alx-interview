@@ -19,7 +19,6 @@ def main():
         for _ in range(10):
             try:
                 line = input()
-                print(line)
                 status_code, file_size = line.split(" ")[-2:]
                 status_code = int(status_code)
                 file_size = int(file_size)

@@ -1,7 +1,9 @@
 #!/usr/bin/python3
+"""This module prints out HTTP Request Stats"""
 
 
 def print_stats(stats):
+    """Prints to stdout the Stats"""
     print(f"File size: {stats['file_size']}", flush=True)
     for key, value in stats.items():
         if not key == "file_size" and value > 0:
@@ -9,6 +11,7 @@ def print_stats(stats):
 
 
 def main():
+    """Main entfry point"""
     while True:
         stats = {
             "file_size": 0,

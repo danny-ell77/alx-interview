@@ -7,7 +7,7 @@ def print_stats(stats):
     print(f"File size: {stats['file_size']}", flush=True)
     for key, value in stats.items():
         if not key == "file_size" and value > 0:
-            print(f"{key}:{value}", flush=True)
+            print(f"{key}: {value}", flush=True)
 
 
 def main():
